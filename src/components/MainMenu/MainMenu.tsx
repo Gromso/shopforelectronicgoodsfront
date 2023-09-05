@@ -18,10 +18,30 @@ interface MainMenuProperties {
     items: MainMenuItem[];
 }
 
+interface MainMenuState{
+    items: MainMenuItem[];
+}
+
 export class MainMenu extends React.Component<MainMenuProperties>{
 
+    state: MainMenuState;
+
+    constructor(props: Readonly<MainMenuProperties>){
+        super(props);
+        this.state = {
+            items: props.items,
+        };
+    }
+
+    setItems(items: MainMenuItem[]){
+        this.setState({
+            items: items,
+        });
+    }
+
+
    private renderMenuItems() {
-        return this.props.items.map((item, index) => (
+        return this.state.items.map((item, index) => (
           <Nav.Link key={index} href={item.link}>
             {item.text}
           </Nav.Link>
