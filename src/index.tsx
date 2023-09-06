@@ -10,14 +10,19 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css'
 import { MainMenu, MainMenuItem } from './components/MainMenu/MainMenu';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import { ContactPage } from './components/ContactPage/ContactPage';
-import { UserLoginPage } from './components/UserLoginPage/UserLoginPage';
+import ContactPage  from './components/ContactPage/ContactPage';
+import UserLoginPage  from './components/UserLoginPage/UserLoginPage';
+import CategoryPage from './components/CategoryPage/CategoryPage';
 
 
 const menuItems = [
   new MainMenuItem("Home", "/"),
-  new MainMenuItem("Contact", "/contact"),
-  new MainMenuItem("Log in", "/user/login"),
+  new MainMenuItem("Contact", "/contact/"),
+  new MainMenuItem("Log in", "/user/login/"),
+
+  new MainMenuItem("cat1", "/category/1/"),
+  new MainMenuItem("cat5", "/category/5/"),
+  new MainMenuItem("cat7", "/category/7/"),
 ];
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,6 +35,8 @@ root.render(
         <Route index path='/'  element={<HomePage/>} />
         <Route path="/contact" element={<ContactPage/>} />
         <Route path="/user/login" element={<UserLoginPage/>} />
+        <Route path="/category/:cId" element={<CategoryPage match={{params: {cId: 1}
+        }}/>} />
       </Routes >
     </HashRouter>
   </React.StrictMode>

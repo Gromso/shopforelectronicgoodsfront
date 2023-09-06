@@ -29,7 +29,7 @@ export class MainMenu extends React.Component<MainMenuProperties>{
     constructor(props: Readonly<MainMenuProperties>) {
         super(props);
         this.state = {
-            items: props.items,
+            items: props.items
         };
     }
 
@@ -37,6 +37,15 @@ export class MainMenu extends React.Component<MainMenuProperties>{
         this.setState({
             items: items,
         });
+    }
+
+
+    private makeNewLink(item: MainMenuItem, index: number){
+        return (
+            <Link key={index} to={item.link} className='nav-link'>
+                {item.text}
+            </Link>
+        );
     }
 
     render() {
@@ -51,14 +60,6 @@ export class MainMenu extends React.Component<MainMenuProperties>{
         );
     }
 
-   
-    private makeNewLink(item: MainMenuItem, index: number){
-        return (
-            <Link key={index} to={item.link} className='nav-link'>
-                {item.text}
-            </Link>
-        );
-    }
 
 
 }

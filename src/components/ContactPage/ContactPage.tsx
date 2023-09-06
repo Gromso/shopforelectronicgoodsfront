@@ -4,7 +4,7 @@ import {Container, Card } from 'react-bootstrap';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 
 
-export class ContactPage extends React.Component {
+export default class ContactPage extends React.Component {
 
     render() {
         return (<Container>
