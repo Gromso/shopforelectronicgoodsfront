@@ -88,12 +88,13 @@ export default class UserLoginPage extends React.Component {
         }
         return (
         <Container>
-            <Col md={{span:6, offset:3}}>
+            <Col md={{span:6 ,  offset:3 }}>
             <Card.Body>
                 <Card.Title>
                     <FontAwesomeIcon icon={faSignInAlt} /> User Login
                 </Card.Title>
-                    <Form >
+                
+                    <Form>
                         <Form.Group>
                            <Form.Label htmlFor="email">E-mail</Form.Label>
                            <Form.Control type="email" id="email"
