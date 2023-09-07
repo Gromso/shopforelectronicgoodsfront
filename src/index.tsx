@@ -10,9 +10,10 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css'
 import { MainMenu, MainMenuItem } from './components/MainMenu/MainMenu';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import ContactPage  from './components/ContactPage/ContactPage';
-import UserLoginPage  from './components/UserLoginPage/UserLoginPage';
+import ContactPage from './components/ContactPage/ContactPage';
+import UserLoginPage from './components/UserLoginPage/UserLoginPage';
 import CategoryPage from './components/CategoryPage/CategoryPage';
+import { Container, Nav } from 'react-bootstrap';
 
 
 const menuItems = [
@@ -29,14 +30,19 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <MainMenu items={menuItems} />
     <HashRouter>
+      <Container >
+        <Nav variant='tabs'>
+          <MainMenu items={menuItems} />
+        </Nav>
+      </Container>
       <Routes >
-        <Route index path='/'  element={<HomePage/>} />
-        <Route path="/contact" element={<ContactPage/>} />
-        <Route path="/user/login" element={<UserLoginPage/>} />
-        <Route path="/category/:cId" element={<CategoryPage match={{params: {cId: 1}
-        }}/>} />
+        <Route index path='/' element={<HomePage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/user/login" element={<UserLoginPage />} />
+        <Route path="/category/:cId" element={<CategoryPage match={{
+          params: { cId: 2 }
+        }} />} />
       </Routes >
     </HashRouter>
   </React.StrictMode>

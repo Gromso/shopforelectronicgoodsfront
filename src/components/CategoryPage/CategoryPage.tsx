@@ -5,36 +5,32 @@ import { Card, Container, Nav } from "react-bootstrap";
 import { HashRouter } from "react-router-dom";
 import CategoryType from "../../types/CategoryType";
 
-interface CategoryPageProperties{
+interface CategoryPageProperties {
     match: {
-        params:{
+        params: {
             cId: number
         }
     }
 }
 
-interface CategoryPageState{
+interface CategoryPageState {
     category?: CategoryType;
 }
 
 
 export default class CategoryPage extends React.Component<CategoryPageProperties>{
-    
     state: CategoryPageState;
-
-    constructor(props: Readonly<CategoryPageProperties>){
+    constructor(props: CategoryPageProperties | Readonly<CategoryPageProperties>) {
         super(props)
-
         this.state = {};
-
     }
 
-
+    
     render() {
         return (<Container>
             <Card.Body>
                 <Card.Title>
-                    <FontAwesomeIcon icon={faListAlt} /> { this.state.category?.name}
+                    <FontAwesomeIcon icon={faListAlt} /> {this.state.category?.name}
                 </Card.Title>
                 <Card.Text>
                     Here, we will have our articles
@@ -45,18 +41,18 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
     }
 
     componentWillMount() {
-       this.getCategoryData();
+        this.getCategoryData();
     }
 
     componentWillReceiveProps(newProperties: Readonly<CategoryPageProperties>) {
-        if(newProperties.match.params.cId === this.props.match.params.cId){
+        if (newProperties.match.params.cId === this.props.match.params.cId) {
             return;
         }
         this.getCategoryData();
     }
 
-    private getCategoryData(){
-        setTimeout(() =>{
+    private getCategoryData() {
+        setTimeout(() => {
             const data: CategoryType = {
                 name: 'Category' + this.props.match.params.cId,
                 categoryId: this.props.match.params.cId,
@@ -67,6 +63,7 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
             })
         }, 750);
     }
+
 
 
 }

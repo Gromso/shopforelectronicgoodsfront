@@ -1,6 +1,6 @@
 import React from 'react';
 import { Nav, Container } from 'react-bootstrap';
-import { HashRouter , Link } from 'react-router-dom';
+import { HashRouter, Link } from 'react-router-dom';
 
 
 export class MainMenuItem {
@@ -26,7 +26,7 @@ export class MainMenu extends React.Component<MainMenuProperties>{
 
     state: MainMenuState;
 
-    constructor(props: Readonly<MainMenuProperties>) {
+    constructor(props: MainMenuProperties | Readonly<MainMenuProperties>) {
         super(props);
         this.state = {
             items: props.items
@@ -39,27 +39,20 @@ export class MainMenu extends React.Component<MainMenuProperties>{
         });
     }
 
-
-    private makeNewLink(item: MainMenuItem, index: number){
-        return (
-            <Link key={index} to={item.link} className='nav-link'>
-                {item.text}
-            </Link>
-        );
-    }
-
     render() {
         return (
-            <Container>
-                <Nav variant='tabs'>
-                    <HashRouter>
-                        {this.state.items.map(this.makeNewLink)}
-                    </HashRouter>
-                </Nav>
+            <Container className='flex-row d-flex'>
+                {this.state.items.map(this.makeNewLink)}
             </Container>
         );
     }
 
-
+    private makeNewLink(item: MainMenuItem, index: number) {
+        return (
+            <Link key={index} to={item.link} className='nav-link' >
+                {item.text}
+            </Link>
+        );
+    }
 
 }
