@@ -38,19 +38,25 @@ class HomePage extends React.Component {
   
 
   private getCategories(){
-    api('/api/category/categories', 'get',{})
+    api('/api/category/categories ', 'get',{})
     .then((res: ApiRepsonse)=>{
-      if(res.status === 'error' || res.status === 'login' ){
-        this.setLogginState(false);
-        return;
+      if(res.status === 'login' ){//  || res.status === 'login'
+        return this.setLogginState(false);
+        
+      }
+      if(res.status === 'error'){
+
       }
 
-      this.putCategoriesInState(res.data);
+      this.putCategoriesInState(res.date);
     });
 
   }
 
   private putCategoriesInState(date: ApiCategoryDTO[]){
+    if (!Array.isArray(date) || date.length === 0) {
+      return <div>No categories found.</div>;
+  }
     const categorie: CategoryType[] = date.map(category => {
       return {
         category_id: category.category_id,
@@ -76,7 +82,7 @@ class HomePage extends React.Component {
 
 
   render() {
-    if (this.state.isUserLoggedIn !== true) {
+    if (this.state.isUserLoggedIn === false) {
       return (
         <Navigate to="/user/login" />
       );

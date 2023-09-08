@@ -16,29 +16,27 @@ export default function api(path: string, method: 'get' | 'post' | 'put' | 'dele
                 "Authorization": getAuthorizationHeader(),
             },
         }
-        
 
-        
         axios(requestData)
             .then(res => responseHandler(res, resolve, requestData))
             .catch(async err => {
                 if (err.response.status === 401) {
-                    
+
                     const newToken = await refreshToken();
-        
+
                     if (!newToken) {
                         const response: ApiRepsonse = {
                             status: 'login',
-                            data: null,
+                            date: null,
                         };
                         return resolve(response);
                     }
-        
+
                     saveToken(newToken);
-                requestData.headers['Authorization'] = getToken()
-                
-                return await repeatRequest(requestData,resolve);
-            }
+                    requestData.headers['Authorization'] = getToken()
+
+                    return await repeatRequest(requestData, resolve);
+                }
             });
     });
 
@@ -47,41 +45,41 @@ export default function api(path: string, method: 'get' | 'post' | 'put' | 'dele
 
 export interface ApiRepsonse {
     status: 'ok' | 'error' | 'login';
-    data: any;
+    date: any;
 }
 
 async function responseHandler(res: AxiosResponse<any>,
     resolve: (value: ApiRepsonse) => void, requestData: AxiosRequestConfig) {
 
     if (res.status < 200 || res.status >= 300) {
-            if (!requestData.headers) {
-                const response: ApiRepsonse = {
-                    status: 'login',
-                    data: null,
-                };
-                return response;
-            }
-            requestData.headers['Authorization'] = getAuthorizationHeader();
-            return await repeatRequest(requestData, resolve);
-        
+        if (!requestData.headers) {
+            const response: ApiRepsonse = {
+                status: 'login',
+                date: null,
+            };
+            return response;
+        }
+        requestData.headers['Authorization'] = getAuthorizationHeader();
+        return await repeatRequest(requestData, resolve);
+
 
         const response: ApiRepsonse = {
             status: 'error',
-            data: res.data,
+            date: res.data,
         };
         return resolve(response);
     }
 
     let response: ApiRepsonse;
-    if(res.data.statusCode < 0){
+    if (res.data.statusCode < 0) {
         response = {
             status: 'login',
-            data: null
+            date: null
         };
-    }else{
+    } else {
         response = {
             status: 'ok',
-            data: res.data
+            date: res.data
         };
     }
     resolve(response);
@@ -96,21 +94,21 @@ function getAuthorizationHeader() {
     }
 }
 
-function getToken(){
+function getToken() {
     const token = localStorage.getItem("api-token");
     return token + '';
 }
 
- export function saveToken(token: string) {
+export function saveToken(token: string) {
     localStorage.setItem('api_token', token);
 }
 
-function getRefreshToken() :string{
+function getRefreshToken(): string {
     const token = localStorage.getItem('api_refresh_token');
     return token + '';
 }
 
-export function saveRefreshToken(token:string){
+export function saveRefreshToken(token: string) {
     localStorage.setItem('api_refresh_token', token);
 }
 
@@ -120,9 +118,6 @@ async function refreshToken(): Promise<string | null> {
     const data = {
         token: getRefreshToken(),
     }
-
-
-
 
     const refreshTokenRequestData: AxiosRequestConfig = {
         method: 'post',
@@ -149,16 +144,16 @@ async function repeatRequest(requestData: AxiosRequestConfig<any>,
         .then(res => {
             let response: ApiRepsonse;
 
-            if (res.status === 401) {
+            if (res.status === 401 && res.status === null) {
                 response = {
                     status: 'login',
-                    data: null,
+                    date: null,
                 };
                 return response;
             } else {
                 response = {
                     status: 'ok',
-                    data: res,
+                    date: res,
                 };
             }
             return resolve(response);
@@ -166,7 +161,7 @@ async function repeatRequest(requestData: AxiosRequestConfig<any>,
         .catch(err => {
             const response: ApiRepsonse = {
                 status: 'error',
-                data: err,
+                date: err,
             };
             return resolve(response);
         });

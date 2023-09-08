@@ -183,8 +183,8 @@ export class UserRegistrationPage extends React.Component {
                     this.setErrorMessage("System error... Try agein!")
                     return;
                 }
-                if (res.data.statusCode !== undefined) {
-                    this.handleErrors(res.data);
+                if (res.date.statusCode !== undefined) {
+                    this.handleErrors(res.date);
                     return;
                 }
                 this.registretionComplete();

@@ -39,9 +39,11 @@ export class MainMenu extends React.Component<MainMenuProperties>{
         });
     }
 
+
     render() {
         return (
             <Container className='flex-row d-flex'>
+
                 {this.state.items.map(this.makeNewLink)}
             </Container>
         );

@@ -40,11 +40,7 @@ root.render(
         <Route index path='/' element={<HomePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/user/login" element={<UserLoginPage />} />
-        <Route path="/category/:cId?" element={<CategoryPage match={{
-          params: {
-            cId: 1
-          }
-        }} />} />
+        <Route  path="/category/:cId" element ={<CategoryPage/>}/>
         <Route path="/user/register" element={<UserRegistrationPage/>}/>
       </Routes >
     </HashRouter>
