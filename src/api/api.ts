@@ -12,18 +12,19 @@ export default function api(path: string, method: 'get' | 'post' | 'put' | 'dele
             baseURL: Apiconfig.API_URL,
             data: JSON.stringify(body),
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': getToken(),
+                "Content-Type": "application/json",
+                "Authorization": getAuthorizationHeader(),
             },
         }
+        
 
         
         axios(requestData)
             .then(res => responseHandler(res, resolve, requestData))
             .catch(async err => {
                 if (err.response.status === 401) {
+                    
                     const newToken = await refreshToken();
-        
         
                     if (!newToken) {
                         const response: ApiRepsonse = {
@@ -51,6 +52,7 @@ export interface ApiRepsonse {
 
 async function responseHandler(res: AxiosResponse<any>,
     resolve: (value: ApiRepsonse) => void, requestData: AxiosRequestConfig) {
+
     if (res.status < 200 || res.status >= 300) {
             if (!requestData.headers) {
                 const response: ApiRepsonse = {
@@ -59,9 +61,7 @@ async function responseHandler(res: AxiosResponse<any>,
                 };
                 return response;
             }
-
-            requestData.headers['Authorization'] = getToken();
-
+            requestData.headers['Authorization'] = getAuthorizationHeader();
             return await repeatRequest(requestData, resolve);
         
 
@@ -87,12 +87,19 @@ async function responseHandler(res: AxiosResponse<any>,
     resolve(response);
 }
 
-
-function getToken(): string {
+function getAuthorizationHeader() {
     const token = localStorage.getItem('api_token');
-    return 'Berer ' + token;
+    if (token) {
+        return `Bearer ${token}`;
+    } else {
+        return '';
+    }
 }
 
+function getToken(){
+    const token = localStorage.getItem("api-token");
+    return token + '';
+}
 
  export function saveToken(token: string) {
     localStorage.setItem('api_token', token);

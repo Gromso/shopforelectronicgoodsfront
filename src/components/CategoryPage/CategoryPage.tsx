@@ -2,13 +2,13 @@ import { faListAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Card, Container, Nav } from "react-bootstrap";
-import { HashRouter } from "react-router-dom";
 import CategoryType from "../../types/CategoryType";
+
 
 interface CategoryPageProperties {
     match: {
         params: {
-            cId: number
+            cId?: number
         }
     }
 }
@@ -30,7 +30,8 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
         return (<Container>
             <Card.Body>
                 <Card.Title>
-                    <FontAwesomeIcon icon={faListAlt} /> {this.state.category?.name}
+                    <FontAwesomeIcon icon={faListAlt} />
+                     {this.state.category?.name}
                 </Card.Title>
                 <Card.Text>
                     Here, we will have our articles
@@ -55,7 +56,7 @@ export default class CategoryPage extends React.Component<CategoryPageProperties
         setTimeout(() => {
             const data: CategoryType = {
                 name: 'Category' + this.props.match.params.cId,
-                categoryId: this.props.match.params.cId,
+                category_id: this.props.match.params.cId,
                 items: []
             };
             this.setState({

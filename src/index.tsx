@@ -17,15 +17,13 @@ import { Container, Nav } from 'react-bootstrap';
 import { UserRegistrationPage } from './components/UserRegisterPage/UserRegistrationPage';
 
 
+
+
 const menuItems = [
   new MainMenuItem("Home", "/"),
   new MainMenuItem("Contact", "/contact/"),
   new MainMenuItem("Log in", "/user/login/"),
   new MainMenuItem("Register", "/user/register"),
-
-  new MainMenuItem("cat1", "/category/1/"),
-  new MainMenuItem("cat5", "/category/5/"),
-  new MainMenuItem("cat7", "/category/7/"),
 ];
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -42,7 +40,11 @@ root.render(
         <Route index path='/' element={<HomePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/user/login" element={<UserLoginPage />} />
-        <Route path="/category/:cId" element={<CategoryPage match={{params: { cId: 2 }}} />} />
+        <Route path="/category/:cId?" element={<CategoryPage match={{
+          params: {
+            cId: 1
+          }
+        }} />} />
         <Route path="/user/register" element={<UserRegistrationPage/>}/>
       </Routes >
     </HashRouter>
