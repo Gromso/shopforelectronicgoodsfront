@@ -4,6 +4,8 @@ import { resolve } from 'path';
 import { rejects } from 'assert';
 import { request } from 'http';
 
+
+
 export default function api(path: string, method: 'get' | 'post' | 'put' | 'delete', body: any | undefined) {
     return new Promise<ApiRepsonse>((resolve) => {
         const requestData = {
@@ -15,15 +17,20 @@ export default function api(path: string, method: 'get' | 'post' | 'put' | 'dele
                 "Content-Type": "application/json",
                 "Authorization": getAuthorizationHeader(),
             },
-        }
+        };
 
         axios(requestData)
             .then(res => responseHandler(res, resolve, requestData))
             .catch(async err => {
+                if (err.response.status === 403) {
+                    const response: ApiRepsonse = {
+                        status: 'login',
+                        date: null,
+                    };
+                    return resolve(response);
+                }
                 if (err.response.status === 401) {
-
                     const newToken = await refreshToken();
-
                     if (!newToken) {
                         const response: ApiRepsonse = {
                             status: 'login',
@@ -31,17 +38,80 @@ export default function api(path: string, method: 'get' | 'post' | 'put' | 'dele
                         };
                         return resolve(response);
                     }
-
                     saveToken(newToken);
-                    requestData.headers['Authorization'] = getToken()
-
+                    requestData.headers['Authorization'] = getAuthorizationHeader()
                     return await repeatRequest(requestData, resolve);
                 }
+                const response : ApiRepsonse = {
+                    status : 'error',
+                    date : err
+                };
+                resolve(response);
+                
             });
     });
 
 }
 
+
+export function apifile(
+    path: string,
+    name: string,
+    file: File) {
+    return new Promise<ApiRepsonse>((resolve) => {
+        const formData = new FormData();
+        formData.append(name, file)
+
+
+        const requestData : AxiosRequestConfig = {
+            method: 'post',
+            url: path,
+            baseURL: Apiconfig.API_URL,
+            data: formData,
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Authorization": getAuthorizationHeader(),
+            },
+        };
+
+        axios(requestData)
+            .then(res => responseHandler(res, resolve, requestData))
+            .catch(async err => {
+                if (err.response.status === 403) {
+                    const response: ApiRepsonse = {
+                        status: 'login',
+                        date: null,
+                    };
+                    return resolve(response);
+                }
+                if (err.response.status === 401) {
+                    const newToken = await refreshToken();
+                    if (!newToken) {
+                        const response: ApiRepsonse = {
+                            status: 'login',
+                            date: null,
+                        };
+                        return resolve(response);
+                    }
+                    saveToken(newToken);
+
+                    if(requestData.headers === undefined){
+                        return;
+                    }
+                    requestData.headers['Authorization'] = getAuthorizationHeader()
+                    return await repeatRequest(requestData, resolve);
+                    
+                }
+
+                const response : ApiRepsonse = {
+                    status : 'error',
+                    date : err
+                };
+                resolve(response);
+            });
+    });
+
+}
 
 export interface ApiRepsonse {
     status: 'ok' | 'error' | 'login';
@@ -61,15 +131,12 @@ async function responseHandler(res: AxiosResponse<any>,
         }
         requestData.headers['Authorization'] = getAuthorizationHeader();
         return await repeatRequest(requestData, resolve);
-
-
         const response: ApiRepsonse = {
             status: 'error',
             date: res.data,
         };
         return resolve(response);
     }
-
     let response: ApiRepsonse;
     if (res.data.statusCode < 0) {
         response = {
@@ -84,6 +151,7 @@ async function responseHandler(res: AxiosResponse<any>,
     }
     resolve(response);
 }
+
 
 function getAuthorizationHeader() {
     const token = localStorage.getItem('api_token');
@@ -115,9 +183,8 @@ export function saveRefreshToken(token: string) {
 
 async function refreshToken(): Promise<string | null> {
     const path = "/auth/user/refresh";
-    const data = {
-        token: getRefreshToken(),
-    }
+    const data = { token: getRefreshToken() }
+
 
     const refreshTokenRequestData: AxiosRequestConfig = {
         method: 'post',
@@ -128,11 +195,16 @@ async function refreshToken(): Promise<string | null> {
             'Content-Type': 'application/json'
         },
     };
-    const rtr: { data: { token: string | undefined } } = await axios(refreshTokenRequestData);
+
+
+    const rtr: { data: { token: string | undefined } } =
+        await axios(refreshTokenRequestData);
 
     if (!rtr.data.token && rtr.data.token == null) {
         return null;
+
     }
+
     return rtr.data.token;
 }
 

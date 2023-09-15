@@ -6,13 +6,10 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import api, { ApiRepsonse } from "../../api/api";
 import CategoryType from "../../types/CategoryType";
 import ArticleType from "../../types/ArticleType";
-import { Apiconfig } from "../../config/apiConfig";
-import { sortAndDeduplicateDiagnostics } from "typescript";
+import SingleArticlePreview from "../SingleArticlePreview/SingleArticlePreview";
+import RoleMainMenu from "../RoleMainMenu/RoleMainMenu";
 
-interface CategoryDTO {
-    category_id: number;
-    name: string;
-}
+
 
 interface ArticleDTO {
     article_id: number,
@@ -39,6 +36,7 @@ interface Filters {
 
 }
 
+
 function CategoryPage() {
     const initialFilters: Filters = {
         keyWords: '',
@@ -46,8 +44,9 @@ function CategoryPage() {
         priceMaximum: 100000,
         order: "price asc"
     }
+
     const { cId } = useParams<{ cId: string }>();
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [message, setMessage] = useState("");
     const [filters, setFilters] = useState<Filters>(initialFilters);
     const [category, setCategory] = useState<CategoryType | undefined>();
@@ -80,31 +79,7 @@ function CategoryPage() {
         return (
             <Row>
                 {articles.map((art) => (
-                    <Col lg="4" md="6" sm="6" xs="12" key={art.articleId}>
-                        <Card className="mb-3">
-                            <Card.Header>
-                                <img alt={art.name}
-                                    src={`${Apiconfig.PHOTO_PATH}/small/${art.imageUrl}`}
-                                    className="w-100"
-                                />
-                            </Card.Header>
-                            <Card.Body>
-                                <Card.Title as="p">
-                                    <strong>{art.name}</strong>
-                                </Card.Title>
-                                <Card.Text>
-                                    {art.excerpt}
-                                </Card.Text>
-                                <Card.Text>
-                                    Price: {art.price?.toFixed(2)} EUR
-                                </Card.Text>
-                                <Link to={`/article/${art.articleId}`}
-                                    className="btn btn-primary btn-block btn-sm">
-                                    Open article Page
-                                </Link>
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <SingleArticlePreview key={art.articleId} art={art} />
                 ))}
             </Row>
         );
@@ -119,26 +94,26 @@ function CategoryPage() {
 
     const filterKeyWordsChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewFilter(Object.assign(filters, {
-            keyWords:event.target.value
+            keyWords: event.target.value
         }));
-        
+
     }
-    const filterPriceMinChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
+    const filterPriceMinChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewFilter(Object.assign(filters, {
             priceMinimum: Number(event.target.value)
         }));
     }
-    const filterPriceMaxChanged = (event: React.ChangeEvent<HTMLInputElement>) =>{
+    const filterPriceMaxChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewFilter(Object.assign(filters, {
             priceMaximum: Number(event.target.value)
         }));
     }
-    const filterOrderChanged = (event: React.ChangeEvent<HTMLSelectElement>) =>{
+    const filterOrderChanged = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setNewFilter(Object.assign(filters, {
             order: event.target.value,
         }));
     }
-    const applyFillters = () =>{
+    const applyFillters = () => {
         getCategoryData();
     }
     const printFilters = () => {
@@ -153,27 +128,27 @@ function CategoryPage() {
                 </Form.Group>
                 <Form.Group>
                     <Row>
-                        
+
                         <Col xs="12" sm="6">
-                        <Form.Label htmlFor="priceMin">Min. price</Form.Label>
+                            <Form.Label htmlFor="priceMin">Min. price</Form.Label>
                             <Form.Control type="number" id="priceMin"
-                                           step={10} min="0" max="90000"
-                                           value = {filters.priceMinimum}
-                                           onChange={(e) => filterPriceMinChanged(e as any)}/>
+                                step={10} min="0" max="90000"
+                                value={filters.priceMinimum}
+                                onChange={(e) => filterPriceMinChanged(e as any)} />
                         </Col>
                         <Col xs="12" sm="6">
-                        <Form.Label htmlFor="priceMax">Max. price</Form.Label>
+                            <Form.Label htmlFor="priceMax">Max. price</Form.Label>
                             <Form.Control type="number" id="priceMax"
-                                           step={100} min="0" max="100000"
-                                           value = {filters.priceMaximum}
-                                           onChange={(e) => filterPriceMaxChanged(e as any)}/>
+                                step={100} min="0" max="100000"
+                                value={filters.priceMaximum}
+                                onChange={(e) => filterPriceMaxChanged(e as any)} />
                         </Col>
                     </Row>
                 </Form.Group>
                 <Form.Group>
                     <Form.Control as="select" id="sortOrder" className="mt-2"
-                                  value={filters.order}
-                                  onChange={(e) => filterOrderChanged(e as any)}>
+                        value={filters.order}
+                        onChange={(e) => filterOrderChanged(e as any)}>
                         <option value="name asc">Sort by name- ascending</option>
                         <option value="name desc">Sort by name- descending</option>
                         <option value="price asc">Sort by price- ascending</option>
@@ -181,10 +156,12 @@ function CategoryPage() {
 
                     </Form.Control>
                 </Form.Group>
+
+                <h2>Features</h2>
                 <Form.Group>
                     <Button variant="primary" className="mt-2"
-                     onClick={() => applyFillters()}>
-                        <FontAwesomeIcon icon={faSearch}/> Search
+                        onClick={() => applyFillters()}>
+                        <FontAwesomeIcon icon={faSearch} /> Search
                     </Button>
                 </Form.Group>
             </>
@@ -202,12 +179,12 @@ function CategoryPage() {
         return (
             <Row>
                 {subCategories.map((category) => (
-                    <Col md="3" sm="6" xs="12" key={category.category_id}>
+                    <Col md="3" sm="6" xs="12" key={category.categoryId}>
                         <Card className="mb-3">
                             <Card.Body>
                                 <Card.Title as="p">{category.name}</Card.Title>
                                 <Link
-                                    to={`/category/${category.category_id}`}
+                                    to={`/category/${category.categoryId}`}
                                     className="btn btn-primary btn-block btn-sm"
                                 >
                                     Open category
@@ -228,7 +205,8 @@ function CategoryPage() {
         api(`/api/category/${cId}`, "get", {})
             .then((res: ApiRepsonse) => {
                 if (res.status === "login") {
-                    setLoginState(false);
+                    setLoginState(true);
+                    return;
                 } else if (res.status === "error") {
                     setMessage("Request error, please try refreshing the page.");
                 } else {
@@ -236,7 +214,7 @@ function CategoryPage() {
                         setMessage("No categories found.");
                     } else {
                         const categoryData: CategoryType = {
-                            category_id: res.date.category_id,
+                            categoryId: res.date.category_id,
                             name: res.date.name,
                         };
                         setCategory(categoryData);
@@ -261,7 +239,8 @@ function CategoryPage() {
                 })
                     .then((res: ApiRepsonse) => {
                         if (res.status === "login") {
-                            setLoginState(false);
+                            setLoginState(true);
+                            return;
                         } else if (res.status === "error") {
                             setMessage("Request error, please try refreshing the page.");
                         }
@@ -295,29 +274,32 @@ function CategoryPage() {
             });
     };
 
-    if (!isUserLoggedIn) {
+    if (isUserLoggedIn) {
         return <Navigate to="/user/login" />;
     }
 
     return (
         <Container>
-            <Card.Body>
-                <Card.Title>
-                    <FontAwesomeIcon icon={faListAlt} />
-                    {category?.name}
-                </Card.Title>
-                {printOptionMessage()}
-                {showSubCategories()}
-                <Row>
-                    <Col xs="12" md="4" lg="3">
-                        {printFilters()}
-                    </Col>
+            <RoleMainMenu role="user"/>
+            <Card>
+                <Card.Body>
+                    <Card.Title>
+                        <FontAwesomeIcon icon={faListAlt} />
+                        {category?.name}
+                    </Card.Title>
+                    {printOptionMessage()}
+                    {showSubCategories()}
+                    <Row>
+                        <Col xs="12" md="4" lg="3">
+                            {printFilters()}
+                        </Col>
 
-                    <Col xs="12" md="8" lg="9">
-                        {showArticles()}
-                    </Col>
-                </Row>
-            </Card.Body>
+                        <Col xs="12" md="8" lg="9">
+                            {showArticles()}
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
         </Container>
     );
 }

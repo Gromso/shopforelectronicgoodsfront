@@ -8,40 +8,37 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css'
-import { MainMenu, MainMenuItem } from './components/MainMenu/MainMenu';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import ContactPage from './components/ContactPage/ContactPage';
 import UserLoginPage from './components/UserLoginPage/UserLoginPage';
 import CategoryPage from './components/CategoryPage/CategoryPage';
-import { Container, Nav } from 'react-bootstrap';
 import { UserRegistrationPage } from './components/UserRegisterPage/UserRegistrationPage';
+import OrdersPage from './components/OrdersPage/OrdersPage';
+import AdministratorPage from './components/AdministratorPage/AdministratorPage';
+import AdministratorPageCategory from './components/AdministratorPageCategory/AdministratorPageCategory';
+import AdministratorPageFeature from './components/AdministratorPageFeature/AdministratorPageFeature';
+import AdministratorPageArticle from './components/AdministratorPageArticle/AdministratorPageArticle';
 
 
-
-
-const menuItems = [
-  new MainMenuItem("Home", "/"),
-  new MainMenuItem("Contact", "/contact/"),
-  new MainMenuItem("Log in", "/user/login/"),
-  new MainMenuItem("Register", "/user/register"),
-];
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <HashRouter>
-      <Container >
-        <Nav variant='tabs'>
-          <MainMenu items={menuItems} />
-        </Nav>
-      </Container>
       <Routes >
-        <Route index path='/' element={<HomePage />} />
+        <Route path='/' element={<HomePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/user/login" element={<UserLoginPage />} />
-        <Route  path="/category/:cId" element ={<CategoryPage/>}/>
+        <Route path="/category/:cId" element ={<CategoryPage/>}/>
         <Route path="/user/register" element={<UserRegistrationPage/>}/>
+        <Route path="/user/order" element={<OrdersPage/>}/>
+        <Route path='/admin/dashboard' element={<AdministratorPage/>}/>
+        <Route path='/admin/dashboard/category' element={<AdministratorPageCategory/>}/>
+        <Route path='/admin/dashboard/features/:cId' element={<AdministratorPageFeature/>}/>
+        <Route path='/admin/dashboard/articles' element={<AdministratorPageArticle/>}/>
+
+
       </Routes >
     </HashRouter>
   </React.StrictMode>

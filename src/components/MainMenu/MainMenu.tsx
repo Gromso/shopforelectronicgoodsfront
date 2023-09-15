@@ -1,6 +1,7 @@
 import React from 'react';
-import { Nav, Container } from 'react-bootstrap';
-import { HashRouter, Link } from 'react-router-dom';
+import { Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Cart from '../Cart/Cart';
 
 
 export class MainMenuItem {
@@ -16,6 +17,7 @@ export class MainMenuItem {
 
 interface MainMenuProperties {
     items: MainMenuItem[];
+    showCart?: boolean;
 }
 
 interface MainMenuState {
@@ -29,7 +31,7 @@ export class MainMenu extends React.Component<MainMenuProperties>{
     constructor(props: MainMenuProperties | Readonly<MainMenuProperties>) {
         super(props);
         this.state = {
-            items: props.items
+            items: props.items,
         };
     }
 
@@ -42,10 +44,10 @@ export class MainMenu extends React.Component<MainMenuProperties>{
 
     render() {
         return (
-            <Container className='flex-row d-flex'>
-
+            <Nav variant='tabs'>
                 {this.state.items.map(this.makeNewLink)}
-            </Container>
+                {this.props.showCart ? <Cart /> : ''}
+            </Nav>
         );
     }
 

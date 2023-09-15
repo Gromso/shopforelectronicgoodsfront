@@ -1,8 +1,10 @@
 import ArticleType from "./ArticleType";
 
 export default class CategoryType{
-    category_id?: number;
+    categoryId?: number;
     name?: string;
+    image_path?:string;
     items?: ArticleType[];
+    parentCategoryId?:number | null;
 
 }
