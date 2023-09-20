@@ -214,9 +214,10 @@ function CategoryPage() {
                         setMessage("No categories found.");
                     } else {
                         const categoryData: CategoryType = {
-                            categoryId: res.date.category_id,
+                            categoryId: res.date.categoryId,
+                            
                             name: res.date.name,
-                        };
+                        };         
                         setCategory(categoryData);
                         /*const subCategoriesData: CategoryType[] = res.date.categories.map(
                           (category: CategoryDTO) => ({
@@ -227,6 +228,7 @@ function CategoryPage() {
 
                         //setSubCategories(subCategoriesData);
                     }
+                    
                 }
 
                 api('api/article/searchh', 'post', {

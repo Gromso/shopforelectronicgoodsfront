@@ -1,15 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Container, Card, Col, Table, Button, Modal, Form, Alert, Row } from 'react-bootstrap';
-import { faEdit, faListAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faImage, faImages, faListAlt, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import api, { ApiRepsonse, apifile } from '../../api/api'
 import { Navigate } from "react-router-dom";
 import RoleMainMenu from "../RoleMainMenu/RoleMainMenu";
-import { Link } from "react-router-dom";
 import ArticleType from "../../types/ArticleType";
 import ApiArticleDTO from "../../dtos/ApiArticleDTO";
 import CategoryType from "../../types/CategoryType";
 import ApiCategotyDTO from "../../dtos/ApiCategoryDTO";
+import FeatureType from "../../types/FeatureType";
+import { Link } from "react-router-dom";
 
 
 interface AdministratorPageArticleState {
@@ -23,6 +24,7 @@ interface AdministratorPageArticleState {
         visible: boolean;
         errorMessage: string;
 
+        articleId?: number;
         name: string;
         categoryId: number;
         excerpt: string;
@@ -42,6 +44,7 @@ interface AdministratorPageArticleState {
         visible: boolean;
         errorMessage: string;
 
+        articleId?: number;
         name: string;
         categoryId: number;
         excerpt: string;
@@ -82,6 +85,7 @@ export default class AdministratorPageArticle extends React.Component {
             ],
 
             addModal: {
+               
                 visible: false,
                 errorMessage: '',
                 name: '',
@@ -93,6 +97,7 @@ export default class AdministratorPageArticle extends React.Component {
 
             },
             editModal: {
+                
                 visible: false,
                 errorMessage: '',
                 name: '',
@@ -182,6 +187,37 @@ export default class AdministratorPageArticle extends React.Component {
         ));
     }
 
+    private setEditModalFeatureUse(featureId: number, use: boolean) {
+        const EditFeatures: { featureId: number, use: number }[] = [...this.state.editModal.features];
+        for (const feature of EditFeatures) {
+            if (feature.featureId === featureId) {
+                feature.use = use ? 1 : 0;
+                break;
+            }
+        }
+        this.setState(Object.assign(this.state,
+            Object.assign(this.state.editModal, {
+                features: EditFeatures,
+            }),
+        ));
+    }
+
+
+    private setEditModalFeatureValue(featureId: number, value: string) {
+        const EditFeatures: { featureId: number, value: string }[] = [...this.state.editModal.features];
+        for (const feature of EditFeatures) {
+            if (feature.featureId === featureId) {
+                feature.value = value;
+                break;
+            }
+        }
+        this.setState(Object.assign(this.state,
+            Object.assign(this.state.editModal, {
+                features: EditFeatures,
+            }),
+        ));
+    }
+
 
 
     private setEditModalVisibleState(newState: boolean) {
@@ -218,6 +254,8 @@ export default class AdministratorPageArticle extends React.Component {
         this.setState(newState);
     }
 
+
+
     private async getFeatureByCategoryId(categoryId: number): Promise<FeatureBaseType[]> {
         return new Promise(resolve => {
             api('/api/feature/category/' + categoryId, 'get', {})
@@ -241,13 +279,8 @@ export default class AdministratorPageArticle extends React.Component {
                         alert("there are no feature for that category")
                         return;
                     }
-
-
-
-
                 })
         })
-
     }
 
     private getArticles() {
@@ -290,6 +323,7 @@ export default class AdministratorPageArticle extends React.Component {
                 articlePrices: article.articlePrices,
                 photos: article.photos,
                 category: article.category,
+                categoryId: article.category_id,
 
             };
         });
@@ -356,6 +390,25 @@ export default class AdministratorPageArticle extends React.Component {
         )
     }
 
+    private printEditModalFeatureInput(feature: any) {
+        return (
+            <Form.Group >
+                <Row>
+                    <Col xs="4" sm="1" className="text-center">
+                        <input type="checkbox" value={1} checked={feature.use === 1}
+                            onChange={(e) => this.setEditModalFeatureUse(feature.featureId, e.target.checked)} />
+                    </Col>
+                    <Col xs="8" sm="3">
+                        {feature.name}
+                    </Col>
+                    <Col xs="12" sm="8">
+                        <Form.Control type="text" value={feature.value}
+                            onChange={(e) => this.setEditModalFeatureValue(feature.featureId, e.target.value)} />
+                    </Col>
+                </Row>
+            </Form.Group>
+        )
+    }
 
     componentDidMount(): void {
         this.getArticles();
@@ -412,7 +465,10 @@ export default class AdministratorPageArticle extends React.Component {
                                             <td> {art.isPromoted ? "Yes" : "No"}</td>
                                             <td className="text-right"> {art.price}</td>
                                             <td className="text-center">
-                                                //....
+                                                <Link to={"/admin/dashboard/photo/" + art.articleId}
+                                                    className="btn btn-sm btn-info mb-2">
+                                                        <FontAwesomeIcon icon={ faImages }/> Photos
+                                                </Link>
 
                                                 <Button variant="info" size="sm"
                                                     onClick={() => this.showEditModal(art)}>
@@ -464,31 +520,7 @@ export default class AdministratorPageArticle extends React.Component {
                                 onChange={(e) => this.setAddModalStringFildState('description', e.target.value)}
                                 rows={10} />
                         </Form.Group>
-                        {/* 
-                        <Form.Group>
-                            <Form.Label htmlFor="add-status">status</Form.Label>
-                            <Form.Control
-                                id="add-status"
-                                as="select"
-                                value={this.state.addModal.categoryId.toString()}
-                                onChange={(e) => this.setAddModalStringFildState('status', e.target.value)}>
-                                <option value="available">available</option>
-                                <option value="visible">visible</option>
-                                <option value="hidden">hidden</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label htmlFor="add-isPromoted">Promoted</Form.Label>
-                            <Form.Control
-                                id="add-isPromoted"
-                                as="select"
-                                value={this.state.addModal.isPromoted.toString()}
-                                onChange={(e) => this.setAddModalNumberFildState('isPromoted', e.target.value)}>
-                                <option value={0}>Not Promoted</option>
-                                <option value={1}>Is Promoted</option>
-                            </Form.Control>
-                        </Form.Group>
-                                */   }
+                     
                         <Form.Group>
                             <Form.Label htmlFor="add-price">Price</Form.Label>
                             <Form.Control id="add-price" type="number" min={0.01} step={0.01} value={this.state.addModal.price}
@@ -506,7 +538,7 @@ export default class AdministratorPageArticle extends React.Component {
                         <Form.Group>
                             <Button
                                 value="primary"
-                                onClick={() => this.doAddCategory()}>
+                                onClick={() => this.doAddArticle()}>
                                 <FontAwesomeIcon icon={faPlus}
                                 /> Add new category
                             </Button>
@@ -517,10 +549,81 @@ export default class AdministratorPageArticle extends React.Component {
                     </Modal.Body>
                 </Modal>
 
+                <Modal size="lg" centered show={this.state.editModal.visible}
+                    onHide={() => this.setEditModalVisibleState(false)} >
+                    <Modal.Header>
+                        <Modal.Title>Edit Article</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        
+                        <Form.Group>
+                            <Form.Label htmlFor="edit-name">Name</Form.Label>
+                            <Form.Control id="edit-name" type="text" value={this.state.editModal.name}
+                                onChange={(e) => this.setEditModalStringFildState('name', e.target.value)} />
+                        </Form.Group>
 
+                        <Form.Group>
+                            <Form.Label htmlFor="edit-excerpt">short text</Form.Label>
+                            <Form.Control id="edit-excerpt" type="text" value={this.state.editModal.excerpt}
+                                onChange={(e) => this.setEditModalStringFildState('excerpt', e.target.value)} />
+                        </Form.Group>
 
+                        <Form.Group>
+                            <Form.Label htmlFor="edit-description">detailed text</Form.Label>
+                            <Form.Control id="edit-description" as="textarea" value={this.state.editModal.description}
+                                onChange={(e) => this.setEditModalStringFildState('description', e.target.value)}
+                                rows={10} />
+                        </Form.Group>
+                         
+                        <Form.Group>
+                            <Form.Label htmlFor="edit-status">status</Form.Label>
+                            <Form.Control
+                                id="edit-status"
+                                as="select"
+                                value={this.state.editModal.status.toString()}
+                                onChange={(e) => this.setEditModalStringFildState('status', e.target.value)}>
+                                <option value="available">available</option>
+                                <option value="visible">visible</option>
+                                <option value="hidden">hidden</option>
+                            </Form.Control>
+                        </Form.Group>
 
-            </Container >
+                        <Form.Group>
+                            <Form.Label htmlFor="edit-isPromoted">Promoted</Form.Label>
+                            <Form.Control
+                                id="edit-isPromoted"
+                                as="select"
+                                value={this.state.editModal.isPromoted.toString()}
+                                onChange={(e) => this.setEditModalNumberFildState('isPromoted', e.target.value)}>
+                                <option value={0}>Not Promoted</option>
+                                <option value={1}>Is Promoted</option>
+                            </Form.Control>
+                        </Form.Group>
+                                  
+                        <Form.Group>
+                            <Form.Label htmlFor="edit-price">Price</Form.Label>
+                            <Form.Control id="edit-price" type="number" min={0.01} step={0.01} value={this.state.editModal.price}
+                                onChange={(e) => this.setEditModalNumberFildState('price', e.target.value)} />
+                        </Form.Group>
+                        <div>
+                            {this.state.editModal.features.map(this.printEditModalFeatureInput, this)}
+                        </div>
+
+                        <Form.Group>
+                            <Button
+                                value="primary"
+                                onClick={() => this.doEditArticle()}>
+                                <FontAwesomeIcon icon={faSave}
+                                /> Edit Article
+                            </Button>
+                        </Form.Group>
+                        {this.state.editModal.errorMessage ? (
+                            <Alert variant="danger" >{this.state.editModal.errorMessage}</Alert>
+                        ) : ''}
+                    </Modal.Body>
+                </Modal>
+
+            </Container>
         );
     }
 
@@ -548,7 +651,7 @@ export default class AdministratorPageArticle extends React.Component {
 
     }
 
-    private doAddCategory() {
+    private doAddArticle() {
         const fileCount: any = document.getElementById("add-photo");
 
         if (fileCount?.files.length === null) {
@@ -596,19 +699,61 @@ export default class AdministratorPageArticle extends React.Component {
 
     }
 
-    private showEditModal(art: ArticleType) {
+    private async showEditModal(art: ArticleType) {
         this.setEditModalStringFildState('name', String(art.name));
-
         this.setEditModalNumberFildState('errorMessage', '');
+        this.setEditModalNumberFildState('articleId' , art.articleId);
+        this.setEditModalStringFildState('excerpt', String(art.excerpt));
+        this.setEditModalStringFildState('description', String(art.description));
+        this.setEditModalStringFildState('status', String(art.status));
+        this.setEditModalNumberFildState('isPromoted', art.isPromoted);
+        this.setEditModalNumberFildState('price', art.price);
+
+        let category_id: number | undefined = art.categoryId;
+        if(category_id === undefined){
+            return;
+        }
+        
+        const allFeatures: any[] = await this.getFeatureByCategoryId(category_id)
+
+        for(const apiFeature of allFeatures){
+            
+                apiFeature.use = 0;
+                apiFeature.value = '';
+        
+            if(!art.articleFeatures){
+                continue;
+            }
+            for(const articleFeature of art.articleFeatures){
+                if(articleFeature.feature_id === apiFeature.featureId){
+                    apiFeature.use=1;
+                    apiFeature.value = articleFeature.value;
+                }
+            }
+        }
+        this.setState(Object.assign(this.state,
+            Object.assign(this.state.editModal, {
+                features: allFeatures,
+            }),
+        ));
         this.setEditModalVisibleState(true);
     }
 
 
-    /*private doEditCategory() {
-        api('/api/category/edit/' + this.state.editModal.category_id, 'put', {
+    private doEditArticle() {
+        api('/api/article/editFull/' + this.state.editModal.articleId , 'put', {
             name: this.state.editModal.name,
-            image_path: this.state.editModal.image_path,
-            parentCategoryId: this.state.editModal.parentCategoryId,
+            excerpt: this.state.editModal.excerpt,
+            description: this.state.editModal.description,
+            price: this.state.editModal.price,
+            status: this.state.editModal.status,
+            isPromoted: this.state.editModal.isPromoted,
+            features: this.state.editModal.features
+                .filter(feature => feature.use === 1)
+                .map(feature => ({
+                    feature_id: feature.featureId, // feature_id or featureID
+                    value: feature.value
+                })),
         },)
             .then((res: ApiRepsonse) => {
 
@@ -623,5 +768,7 @@ export default class AdministratorPageArticle extends React.Component {
                 this.setEditModalVisibleState(false);
                 this.getArticles();
             })
-    }*/
+            return null;
+    }
+    
 }

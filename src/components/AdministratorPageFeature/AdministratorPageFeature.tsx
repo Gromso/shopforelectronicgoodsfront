@@ -55,10 +55,10 @@ function AdministratorPageFeature() {
             .then((res: ApiRepsonse) => {
                 if (res.status === "error") {
                     setMessage("Request error, please try refreshing the page.");
+                    setLoginState(true);
                     return;
                 }
                 if (res.status === "login") {
-                    setLoginState(false);
                     return;
                 }
                 putFeaturesInState(res.date);
@@ -89,10 +89,10 @@ function AdministratorPageFeature() {
             .then((res: ApiRepsonse) => {
                 if (res.status === "error") {
                     setEditModal({ ...editModal, errorMessage: "Something is wrong with your data" });
+                    setLoginState(true);
                     return;
                 }
                 if (res.status === "login") {
-                    setLoginState(true);
                     return;
                 }
                 setAddModalVisibleState(false);
@@ -118,10 +118,10 @@ function AdministratorPageFeature() {
             .then((res: ApiRepsonse) => {
                 if (res.status === "error") {
                     setEditModal({ ...editModal, errorMessage: "Something is wrong with your data" });
+                    setLoginState(true);
                     return;
                 }
                 if (res.status === "login") {
-                    setLoginState(true);
                     return;
                 }
                 setEditModal({ ...editModal, visible: false });

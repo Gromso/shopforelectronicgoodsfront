@@ -26,6 +26,7 @@ export default class ArticleType{
         photo_id:number;
         image_path:string;
     }[];
+    categoryId?: number;
     category?:{
         category_id:number;
         name:string;

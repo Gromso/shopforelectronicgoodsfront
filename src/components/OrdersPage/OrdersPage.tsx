@@ -79,9 +79,9 @@ export default class OrdersPage extends React.Component {
     
 
     render(): React.ReactNode {
-        if (this.state.isUserLoggin === false) {
+        if (this.state.isUserLoggin === true) {
             return (
-                <Navigate to="/admin/dashboard" />
+                <Navigate to="/user/login" />
             )
         }
         return (

@@ -29,7 +29,7 @@ export default function api(path: string, method: 'get' | 'post' | 'put' | 'dele
                     };
                     return resolve(response);
                 }
-                if (err.response.status === 401) {
+                if (err.response.status === 401) {  
                     const newToken = await refreshToken();
                     if (!newToken) {
                         const response: ApiRepsonse = {
@@ -38,16 +38,12 @@ export default function api(path: string, method: 'get' | 'post' | 'put' | 'dele
                         };
                         return resolve(response);
                     }
+                    
                     saveToken(newToken);
                     requestData.headers['Authorization'] = getAuthorizationHeader()
                     return await repeatRequest(requestData, resolve);
                 }
-                const response : ApiRepsonse = {
-                    status : 'error',
-                    date : err
-                };
-                resolve(response);
-                
+
             });
     });
 
@@ -85,18 +81,22 @@ export function apifile(
                     return resolve(response);
                 }
                 if (err.response.status === 401) {
-                    const newToken = await refreshToken();
-                    if (!newToken) {
+                    //const newToken = await refreshToken();
+                    /*if (!newToken) {
                         const response: ApiRepsonse = {
                             status: 'login',
                             date: null,
                         };
                         return resolve(response);
                     }
-                    saveToken(newToken);
+                    saveToken(newToken);*/
 
                     if(requestData.headers === undefined){
-                        return;
+                        const response: ApiRepsonse = {
+                            status: 'login',
+                            date: null,
+                        };
+                        return resolve(response);
                     }
                     requestData.headers['Authorization'] = getAuthorizationHeader()
                     return await repeatRequest(requestData, resolve);
@@ -182,8 +182,10 @@ export function saveRefreshToken(token: string) {
 
 
 async function refreshToken(): Promise<string | null> {
+    
     const path = "/auth/user/refresh";
     const data = { token: getRefreshToken() }
+    console.log(data.token)
 
 
     const refreshTokenRequestData: AxiosRequestConfig = {
@@ -195,17 +197,15 @@ async function refreshToken(): Promise<string | null> {
             'Content-Type': 'application/json'
         },
     };
+    
+    const res: { data: { token: string | undefined } } = await axios(refreshTokenRequestData);
 
-
-    const rtr: { data: { token: string | undefined } } =
-        await axios(refreshTokenRequestData);
-
-    if (!rtr.data.token && rtr.data.token == null) {
+    
+    if (!res.data.token && res.data.token == null) {
         return null;
-
     }
-
-    return rtr.data.token;
+ 
+    return res.data.token;
 }
 
 

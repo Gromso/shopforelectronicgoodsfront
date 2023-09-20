@@ -12,6 +12,7 @@ interface UserLoginPageState {
     errorMessage: string;
     isLoggedIn: boolean;
     isUser: boolean;
+    isAdmin: boolean;
 }
 
 export default class UserLoginPage extends React.Component {
@@ -26,6 +27,7 @@ export default class UserLoginPage extends React.Component {
             errorMessage: '',
             isLoggedIn: false,
             isUser: false,
+            isAdmin:false,
         }
     }
 
@@ -55,6 +57,11 @@ export default class UserLoginPage extends React.Component {
             isUser: isUserr,
         }));
     }
+    private setAdminState(isAdmin: boolean) {
+        this.setState(Object.assign(this.state, {
+            isAdmin: isAdmin,
+        }));
+    }
 
     private doLogin() {
         api('/auth/user/login', 'post', {
@@ -64,6 +71,7 @@ export default class UserLoginPage extends React.Component {
             .then((res: ApiRepsonse) => {
                 if (res.status === 'error') {
                     this.setErrorMessage("E-mail or Password his wrong");
+                    this.setLogginState(true)
                     return;
                 }
                 if (res.status === 'ok') {
@@ -78,11 +86,12 @@ export default class UserLoginPage extends React.Component {
                         return;
 
                     }
+                    
                     if (res.date.user.authorities[0].authority === "USER") {
-                        this.setLogginState(true);
+                        this.setUserState(true);
                     }
                     if (res.date.user.authorities[0].authority === "ADMIN") {
-                        this.setUserState(true);
+                        this.setAdminState(true);
                     }
                     saveToken(res.date.token);
                     saveRefreshToken(res.date.refreshToken)
@@ -99,9 +108,14 @@ export default class UserLoginPage extends React.Component {
                 <Navigate to="/" />
             )
         }
-        if (this.state.isUser === true) {
+        if (this.state.isAdmin === true) {
             return (
                 <Navigate to="/admin/dashboard/" />
+            )
+        }
+        if (this.state.isUser === true) {
+            return (
+                <Navigate to="/" />
             )
         }
         return (

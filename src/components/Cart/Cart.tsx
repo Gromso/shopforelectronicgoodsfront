@@ -105,6 +105,9 @@ export default class Cart extends React.Component {
                 this.setStateCart(undefined);
                 return;
             }
+            if(res.status === "login"){
+                return;
+            }
             this.setStateCart(res.date);
             this.setStateCount(res.date.cartArticles.quantity);
         });
@@ -122,6 +125,9 @@ export default class Cart extends React.Component {
                 this.setStateCart(undefined);
                 return;
             }
+            if(res.status === "login"){
+                return;
+            }
                 this.setStateCart(res.date);
                 this.setStateCount(res.date.cartArticles.quantity)
                 if(res.date.cartArticles.length === 0){
@@ -137,6 +143,9 @@ export default class Cart extends React.Component {
             if(res.status === 'error'){
                 this.setStateCount(0);
                 this.setStateCart(undefined);
+                return;
+            }
+            if(res.status === "login"){
                 return;
             }
             this.setStateMessage("You have successfully completed your order");

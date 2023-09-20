@@ -18,6 +18,9 @@ import AdministratorPage from './components/AdministratorPage/AdministratorPage'
 import AdministratorPageCategory from './components/AdministratorPageCategory/AdministratorPageCategory';
 import AdministratorPageFeature from './components/AdministratorPageFeature/AdministratorPageFeature';
 import AdministratorPageArticle from './components/AdministratorPageArticle/AdministratorPageArticle';
+import AdministratorPagePhoto from './components/AdministratorPagePhoto/AdministratorPagePhoto';
+import ArticlePage from './components/ArticlePage/ArticlePage';
+
 
 
 const root = ReactDOM.createRoot(
@@ -32,10 +35,12 @@ root.render(
         <Route path="/user/login" element={<UserLoginPage />} />
         <Route path="/category/:cId" element ={<CategoryPage/>}/>
         <Route path="/user/register" element={<UserRegistrationPage/>}/>
+        <Route path="/article/:aId" element={<ArticlePage/>}/>
         <Route path="/user/order" element={<OrdersPage/>}/>
         <Route path='/admin/dashboard' element={<AdministratorPage/>}/>
         <Route path='/admin/dashboard/category' element={<AdministratorPageCategory/>}/>
         <Route path='/admin/dashboard/features/:cId' element={<AdministratorPageFeature/>}/>
+        <Route path='/admin/dashboard/photo/:aId' element={<AdministratorPagePhoto/>}/>
         <Route path='/admin/dashboard/articles' element={<AdministratorPageArticle/>}/>
 
 
