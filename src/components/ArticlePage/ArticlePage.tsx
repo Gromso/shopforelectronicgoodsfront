@@ -42,7 +42,6 @@ function ArticlePage() {
                     return;
                 }
                 const data: ApiArticleDTO = res.date;
-                //console.log(data)
                 const articleWithId = {
                     ...data, // Kopirajte sve postojeće svojstva iz data objekta
                     articleId: data.article_id // Dodajte article_id kao svojstvo articleId

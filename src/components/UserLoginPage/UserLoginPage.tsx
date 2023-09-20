@@ -105,7 +105,7 @@ export default class UserLoginPage extends React.Component {
     render() {
         if (this.state.isLoggedIn === true) {
             return (
-                <Navigate to="/" />
+                <Navigate to="/user/login" />
             )
         }
         if (this.state.isAdmin === true) {

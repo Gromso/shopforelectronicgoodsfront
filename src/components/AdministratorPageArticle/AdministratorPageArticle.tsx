@@ -425,8 +425,8 @@ export default class AdministratorPageArticle extends React.Component {
             <Container>
                 <RoleMainMenu role="admin" />
                 <Card>
-                    <Col md={{ span: 6, offset: 3 }}>
                         <Card.Body>
+
                             <Card.Title>
                                 <FontAwesomeIcon icon={faListAlt} /> Articles
                                 { }
@@ -466,11 +466,11 @@ export default class AdministratorPageArticle extends React.Component {
                                             <td className="text-right"> {art.price}</td>
                                             <td className="text-center">
                                                 <Link to={"/admin/dashboard/photo/" + art.articleId}
-                                                    className="btn btn-sm btn-info mb-2">
+                                                    className="btn btn-sm btn-info ml-2">
                                                         <FontAwesomeIcon icon={ faImages }/> Photos
                                                 </Link>
 
-                                                <Button variant="info" size="sm"
+                                                <Button variant="info" size="sm" className="ml-2"
                                                     onClick={() => this.showEditModal(art)}>
                                                     <FontAwesomeIcon icon={faEdit} /> Edit
                                                 </Button>
@@ -480,7 +480,6 @@ export default class AdministratorPageArticle extends React.Component {
                                 </tbody>
                             </Table>
                         </Card.Body>
-                    </Col>
                 </Card>
 
                 <Modal size="lg" centered show={this.state.addModal.visible}
@@ -540,7 +539,7 @@ export default class AdministratorPageArticle extends React.Component {
                                 value="primary"
                                 onClick={() => this.doAddArticle()}>
                                 <FontAwesomeIcon icon={faPlus}
-                                /> Add new category
+                                /> Add new Article
                             </Button>
                         </Form.Group>
                         {this.state.addModal.errorMessage ? (

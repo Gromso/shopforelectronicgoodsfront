@@ -20,6 +20,7 @@ import AdministratorPageFeature from './components/AdministratorPageFeature/Admi
 import AdministratorPageArticle from './components/AdministratorPageArticle/AdministratorPageArticle';
 import AdministratorPagePhoto from './components/AdministratorPagePhoto/AdministratorPagePhoto';
 import ArticlePage from './components/ArticlePage/ArticlePage';
+import AdministratorPageOrder from './components/AdministratorPageOrder/AdministratorPageOrder';
 
 
 
@@ -42,7 +43,7 @@ root.render(
         <Route path='/admin/dashboard/features/:cId' element={<AdministratorPageFeature/>}/>
         <Route path='/admin/dashboard/photo/:aId' element={<AdministratorPagePhoto/>}/>
         <Route path='/admin/dashboard/articles' element={<AdministratorPageArticle/>}/>
-
+        <Route path='/admin/dashboard/orders' element={<AdministratorPageOrder/>}/>
 
       </Routes >
     </HashRouter>

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Container, Card, Col, Alert, Nav } from 'react-bootstrap';
+import { Container, Card, Col, Alert, Nav, Navbar } from 'react-bootstrap';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import api, { ApiRepsonse } from '../../api/api'
 import { Navigate } from "react-router-dom";
@@ -78,10 +78,15 @@ export default class AdministratorPage extends React.Component {
                                 <FontAwesomeIcon icon={faHome} /> Administrator Dashboard
                                 { }
                             </Card.Title>
-                            <ul >
-                                <li> <Link to="/admin/dashboard/category">Categories</Link></li>
-                                <li> <Link to="/admin/dashboard/articles">Articles</Link></li>
-                            </ul>
+                            <Navbar  bg="primary" data-bs-theme="dark">
+                                <Container>
+                                    <Nav className="me-auto">
+                                        <Nav.Link href="/#/admin/dashboard/category">Categories</Nav.Link>
+                                        <Nav.Link href="/#/admin/dashboard/articles">Articles</Nav.Link>
+                                        <Nav.Link href="/#/admin/dashboard/orders">Orders</Nav.Link>
+                                    </Nav>
+                                </Container>
+                            </Navbar>
                         </Card.Body>
                     </Col>
                 </Card>

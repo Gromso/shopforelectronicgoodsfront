@@ -72,6 +72,7 @@ function AdministratorPageFeature() {
             category_id: feature.category_id,
             name: feature.name,
         }));
+        
         setFeatures(features);
     };
 
@@ -136,7 +137,6 @@ function AdministratorPageFeature() {
             ) : (
                 <>
                     <Card>
-                        <Col md={{ span: 6, offset: 3 }}>
                             <Card.Body>
                                 <Card.Title>
                                     <FontAwesomeIcon icon={faListUl} /> Features
@@ -146,7 +146,7 @@ function AdministratorPageFeature() {
                                     <thead>
                                         <tr>
                                             <th>...</th>
-                                            <th colSpan={2}>
+                                            <th colSpan={1}>
                                                 <Link to="/admin/dashboard/category" className="btn btn-sm btn-secondary">
                                                     <FontAwesomeIcon icon={faBackward} /> Back to categories
                                                 </Link>
@@ -159,8 +159,8 @@ function AdministratorPageFeature() {
                                         </tr>
                                         <tr>
                                             <th className="text-right">ID</th>
-                                            <th></th>
                                             <th>Name</th>
+                                            <th className="text-center">Edit</th>
                                         </tr>
                                     </thead>
 
@@ -179,7 +179,6 @@ function AdministratorPageFeature() {
                                     </tbody>
                                 </Table>
                             </Card.Body>
-                        </Col>
                     </Card>
 
                     <Modal size="lg" centered show={addModalVisible} onHide={() => setAddModalVisibleState(false)}>

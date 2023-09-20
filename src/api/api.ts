@@ -162,11 +162,6 @@ function getAuthorizationHeader() {
     }
 }
 
-function getToken() {
-    const token = localStorage.getItem("api-token");
-    return token + '';
-}
-
 export function saveToken(token: string) {
     localStorage.setItem('api_token', token);
 }

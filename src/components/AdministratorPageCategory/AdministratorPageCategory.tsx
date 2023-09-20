@@ -137,7 +137,7 @@ export default class AdministratorPageCategory extends React.Component {
         }
         const categorie: CategoryType[] = date.map(category => {
             return {
-                category_id: category.categoryId,
+                categoryId: category.categoryId,
                 name: category.name,
                 image_path: category.image_path,
                 parentCategoryId: category.parentCategoryId,
@@ -166,7 +166,6 @@ export default class AdministratorPageCategory extends React.Component {
             <Container>
                 <RoleMainMenu role="admin" />
                 <Card>
-                    <Col md={{ span: 6, offset: 3 }}>
                         <Card.Body>
                             <Card.Title>
                                 <FontAwesomeIcon icon={faListAlt} /> Categories
@@ -216,7 +215,6 @@ export default class AdministratorPageCategory extends React.Component {
                                 </tbody>
                             </Table>
                         </Card.Body>
-                    </Col>
                 </Card>
 
                 <Modal size="lg" centered show={this.state.addModal.visible}

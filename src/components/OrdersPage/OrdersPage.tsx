@@ -113,7 +113,7 @@ export default class OrdersPage extends React.Component {
     private printOrderRow(order: OrderType){
         return (
             <tr>
-                <td>{order.created_at_order}</td>
+                <td>{order.created_at_order.substring(0,10)}</td>
                 <td>{order.status}</td>
                 <td>
                     ...
